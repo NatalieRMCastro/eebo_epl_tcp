@@ -1,6 +1,6 @@
 [submodule "texts/B36"]
 	path = texts/B36
-	url = git@bitbucket.org:eplib/B36.git
+	url = https://bitbucket.org/eplib/B36.git
 [submodule "texts/A00"]
 	path = texts/A00
 	url = git@bitbucket.org:eplib/A00.git
