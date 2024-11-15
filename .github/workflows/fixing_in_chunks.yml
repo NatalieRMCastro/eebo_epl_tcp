@@ -1,4 +1,4 @@
-name: Fix Submodules
+name: Fix Submodules In CHunks
 
 on:
   workflow_dispatch:
@@ -20,6 +20,22 @@ jobs:
         uses: actions/checkout@v3
         with:
           submodules: false  # Avoid automatic submodule initialization
+
+      - name: Configure HTTPS credentials
+        run: |
+          git config --global user.name "NatalieRMCastro"
+          git config --global user.email "natalie.castro@colorado.edu"
+          git config --global credential.helper store
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Use the built-in GitHub token for access
+
+      - name: Rewrite submodule URLs to HTTPS
+        run: |
+          git submodule foreach --recursive '
+          url=$(git config --file $toplevel/.gitmodules submodule.$name.url | sed "s/git@bitbucket.org:/https:\/\/bitbucket.org\//");
+          git config --file $toplevel/.gitmodules submodule.$name.url $url;
+          git submodule sync $name;
+          '
 
       - name: Initialize and update a specific submodule
         run: |
