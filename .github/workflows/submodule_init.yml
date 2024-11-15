@@ -13,6 +13,13 @@ jobs:
   fix-submodules:
     runs-on: ubuntu-latest  # You can use other OS options like 'windows-latest' or 'macos-latest'
 
+    strategy:
+      matrix:
+        submodule_path:
+          - texts/A00
+          - texts/A01
+          - texts/A02
+          
     steps:
       - name: Checkout the repository
         uses: actions/checkout@v3  # This action checks out your repository
