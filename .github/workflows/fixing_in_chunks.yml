@@ -1,4 +1,4 @@
-name: Fix Submodules In CHunks
+name: Fix Submodules In Chunks
 
 on:
   workflow_dispatch:
@@ -43,4 +43,4 @@ jobs:
           git submodule sync --recursive ${{ matrix.submodule_path }}
           git add ${{ matrix.submodule_path }}
           git commit -m "Fix submodule ${{ matrix.submodule_path }}" || echo "No changes to commit"
-          git push origin main || echo "Nothing to push"
+          git push origin master || echo "Nothing to push"
