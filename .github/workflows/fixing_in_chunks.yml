@@ -1,29 +1,30 @@
-name: Fix Submodules in Chunks
+name: Fix Submodules
 
 on:
   workflow_dispatch:
 
 jobs:
-  process-submodules:
+  fix-submodules:
     runs-on: ubuntu-latest
+
     strategy:
       matrix:
         submodule_path:
           - texts/A00
           - texts/A01
           - texts/A02
-          # Add more submodules as needed
+          # Add more submodule paths as necessary
+
     steps:
-      - name: Checkout repository
+      - name: Checkout the repository without submodules
         uses: actions/checkout@v3
         with:
-          submodules: false
+          submodules: false  # Avoid automatic submodule initialization
 
-      - name: Set up SSH for submodules
-        uses: webfactory/ssh-agent@v0.5.3
-        with:
-          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
-
-      - name: Initialize and update submodule
+      - name: Initialize and update a specific submodule
         run: |
           git submodule update --init --recursive ${{ matrix.submodule_path }}
+          git submodule sync --recursive ${{ matrix.submodule_path }}
+          git add ${{ matrix.submodule_path }}
+          git commit -m "Fix submodule ${{ matrix.submodule_path }}" || echo "No changes to commit"
+          git push origin main || echo "Nothing to push"
