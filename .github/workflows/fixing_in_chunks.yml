@@ -1,0 +1,29 @@
+name: Fix Submodules in Chunks
+
+on:
+  workflow_dispatch:
+
+jobs:
+  process-submodules:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        submodule_path:
+          - texts/A00
+          - texts/A01
+          - texts/A02
+          # Add more submodules as needed
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+        with:
+          submodules: false
+
+      - name: Set up SSH for submodules
+        uses: webfactory/ssh-agent@v0.5.3
+        with:
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+
+      - name: Initialize and update submodule
+        run: |
+          git submodule update --init --recursive ${{ matrix.submodule_path }}
