@@ -1,0 +1,36 @@
+name: Fix Submodules
+
+on:
+  push:
+    branches:
+      - main  # This can be changed to the branch you want
+  pull_request:
+    branches:
+      - main  # Trigger on pull requests to main branch
+
+jobs:
+  fix-submodules:
+    runs-on: ubuntu-latest  # You can use other OS options like 'windows-latest' or 'macos-latest'
+
+    steps:
+      - name: Checkout the repository
+        uses: actions/checkout@v3  # This action checks out your repository
+
+      - name: Initialize and update submodules
+        run: |
+          # Initialize submodules if they're not yet initialized
+          git submodule update --init --recursive
+          
+          # In case the submodules need to be re-initialized or updated
+          git submodule update --recursive --remote
+          
+          # If submodules are broken, this command should attempt to re-checkout the right commit
+          git submodule sync --recursive
+
+      - name: Commit submodule changes (if necessary)
+        run: |
+          # Check if any submodules were updated or if there are changes to commit
+          git status
+          git add .  # Adds all changes (including submodule changes)
+          git commit -m "Fix submodules" || echo "No changes to commit"  # Avoid error if nothing to commit
+          git push origin main  # Push changes back to the repository
