@@ -1,6 +1,7 @@
 name: Fix Submodules
 
 on:
+  workflow_dispatch:
   push:
     branches:
       - main  # This can be changed to the branch you want
